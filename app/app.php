@@ -26,6 +26,8 @@ $app->error(function (\Exception $e, $code) use ($app) {
     switch ($code) {
         case 404:
             return $app->json([ "message" => "not found." ], 404);
+        case 405:
+            return $app->json([ "message" => $e->getMessage() ], 405);
         default:
             return $app->json([ "message" => "sorry server error" ] , 500);
     }
