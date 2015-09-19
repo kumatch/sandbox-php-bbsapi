@@ -1,0 +1,25 @@
+{
+    "name": "kumatch/bbsapi",
+    "type":"library",
+    "homepage": "https://github.com/kumatch/bbsapi",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yosuke Kumakura",
+            "homepage": "https://github.com/kumatch"
+        }
+    ],
+    "require": {
+        "doctrine/orm": "~2.5.1",
+        "symfony/validator": "~2.7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kumatch\\BBSAPI\\": "src/",
+            "Kumatch\\BBSAPI\\Test\\": "tests/"
+        }
+    }
+}
