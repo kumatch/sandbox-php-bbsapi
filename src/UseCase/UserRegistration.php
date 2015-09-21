@@ -2,7 +2,6 @@
 namespace Kumatch\BBSAPI\UseCase;
 
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Kumatch\BBSAPI\Entity\User;
 use Kumatch\BBSAPI\Entity\EntityConstant;
 use Kumatch\BBSAPI\Repository\UserRepository;
