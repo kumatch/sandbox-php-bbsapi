@@ -13,10 +13,14 @@
         "doctrine/orm": "~2.5.1",
         "symfony/validator": "~2.7.4",
         "silex/silex": "~1.3",
-        "kumatch/silex-json-body-provider": "0.1.*"
+        "kumatch/silex-json-body-provider": "0.1.*",
+        "rych/random": "0.1.*"
     },
     "require-dev": {
         "phpunit/phpunit": "4.*"
+    },
+    "scripts": {
+        "server": "cd public && /usr/bin/env php -S localhost:8080"
     },
     "autoload": {
         "psr-4": {
