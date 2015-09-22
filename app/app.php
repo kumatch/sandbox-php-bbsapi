@@ -8,6 +8,7 @@ $config = require_once __DIR__ . "/../config/config.php";
 require_once __DIR__ . "/provider/DoctrineORMServiceProvider.php";
 require_once __DIR__ . "/provider/BBSAPIServiceProvider.php";
 require_once __DIR__ . "/provider/BBSAPIUserServiceProvider.php";
+require_once __DIR__ . "/provider/BBSAPIThreadServiceProvider.php";
 
 AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
 
@@ -20,7 +21,7 @@ $app->register(new BBSAPIServiceProvider(), [
     "salt" => $config["salt"]
 ]);
 $app->register(new BBSAPIUserServiceProvider());
-
+$app->register(new BBSAPITreadServiceProvider());
 
 $app->error(function (\Exception $e, $code) use ($app) {
     switch ($code) {
@@ -29,6 +30,7 @@ $app->error(function (\Exception $e, $code) use ($app) {
         case 405:
             return $app->json([ "message" => $e->getMessage() ], 405);
         default:
+            //error_log($e->getMessage());
             return $app->json([ "message" => "sorry server error" ] , 500);
     }
 });
