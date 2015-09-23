@@ -1,4 +1,4 @@
-(Sandbox) PHP BBSAPI sample application
+(Sandbox) API base BBS sample application
 ========
 
 Requirement
