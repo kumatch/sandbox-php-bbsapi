@@ -2,6 +2,7 @@
 use Silex\Application;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Kumatch\Silex\JsonBodyProvider;
+use Kumatch\BBSAPI\Application\Request;
 use Kumatch\BBSAPI\Application\Provider\DoctrineORMServiceProvider;
 use Kumatch\BBSAPI\Application\Provider\BBSAPIServiceProvider;
 use Kumatch\BBSAPI\Application\Provider\BBSAPIUserServiceProvider;
@@ -11,6 +12,8 @@ $loader = require_once __DIR__ . '/../vendor/autoload.php';
 $config = require_once __DIR__ . "/../config/config.php";
 
 AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
+
+$req = Request::createFromGlobals();
 
 $app = new Application();
 $app->register(new JsonBodyProvider());
@@ -42,4 +45,4 @@ $app->error(function (\Exception $e, $code) use ($app) {
     }
 });
 
-$app->run();
+$app->run($req);

@@ -3,15 +3,19 @@ namespace Kumatch\BBSAPI\Application\Provider;
 
 use Silex\Application;
 use Silex\ServiceProviderInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Kumatch\BBSAPI\Application\Request;
 use Kumatch\BBSAPI\UseCase\UserRegistration;
 use Kumatch\BBSAPI\UseCase\UserAuthentication;
+use Kumatch\BBSAPI\UseCase\UserTokenAuthorization;
 use Kumatch\BBSAPI\Entity\User;
 use Kumatch\BBSAPI\Spec\UserSpec;
 
 class BBSAPIUserServiceProvider implements ServiceProviderInterface
 {
+    const HEADER_AUTHORIZATION_USER_ID = 'X-BBSAPI-USER-ID';
+    const HEADER_AUTHORIZATION_TOKEN = 'X-BBSAPI-TOKEN';
+
     public function register(Application $app)
     {
         $app["bbsapi.user.registration"] = function (Application $app) {
@@ -24,10 +28,30 @@ class BBSAPIUserServiceProvider implements ServiceProviderInterface
             );
         };
 
+        $app["bbsapi.user.token_authorization"] = function (Application $app) {
+            return new UserTokenAuthorization($app["entity_manager"]);
+        };
 
         $app["bbsapi.spec.user_spec"] = function () {
             return new UserSpec();
         };
+
+        $app->before(function (Request $req) use ($app) {
+            $userId = $req->headers->get(self::HEADER_AUTHORIZATION_USER_ID);
+            $tokenString = $req->headers->get(self::HEADER_AUTHORIZATION_TOKEN);
+            if (!$userId || !$tokenString) {
+                return;
+            }
+
+            /** @var UserTokenAuthorization $service */
+            $service = $app["bbsapi.user.token_authorization"];
+            $user = $service->invoke($userId, $tokenString);
+            if (!$user) {
+                return;
+            }
+
+            $req->setUser($user);
+        });
 
         $app->post("/user/register", function (Application $app, Request $req) {
             /** @var UserSpec $spec */
@@ -77,6 +101,7 @@ class BBSAPIUserServiceProvider implements ServiceProviderInterface
             }
 
             return $app->json([
+                "id" => $accessToken->getUser()->getId(),
                 "token" => $accessToken->getToken(),
                 "period" => $accessToken->getPeriod(),
             ]);

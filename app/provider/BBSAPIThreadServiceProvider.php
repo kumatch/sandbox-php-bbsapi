@@ -3,11 +3,10 @@ namespace Kumatch\BBSAPI\Application\Provider;
 
 use Silex\Application;
 use Silex\ServiceProviderInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Kumatch\BBSAPI\Application\Request;
 use Kumatch\BBSAPI\UseCase\ThreadManagement;
 use Kumatch\BBSAPI\UseCase\TagRegistration;
 use Kumatch\BBSAPI\Entity\Thread;
-use Kumatch\BBSAPI\Entity\EntityConstant;
 use Kumatch\BBSAPI\Value\Tags;
 use Kumatch\BBSAPI\Spec\ThreadSpec;
 use Kumatch\BBSAPI\Spec\TagsSpec;
@@ -40,6 +39,11 @@ class BBSAPIThreadServiceProvider implements ServiceProviderInterface
             /** @var TagRegistration $tagRegistration */
             $tagRegistration = $app["bbsapi.tag.registration"];
 
+            $user = $req->getUser();
+            if (!$user) {
+                return $app->json([], 401);
+            }
+
             $title = trim($req->request->get("title"));
             $tagNames = $req->request->get("tags");
             if (is_array($tagNames) || is_null($tagNames)) {
@@ -61,10 +65,6 @@ class BBSAPIThreadServiceProvider implements ServiceProviderInterface
             foreach ($tags as $tag) {
                 $thread->addTag($tagRegistration->register($tag));
             }
-
-            // todo:
-            $em = $app["entity_manager"];
-            $user = $em->getRepository(EntityConstant::USER)->find(1);
 
             $thread = $service->create($thread, $user);
 
@@ -106,7 +106,7 @@ class BBSAPIThreadServiceProvider implements ServiceProviderInterface
         });
 
 
-        $app->delete("/threads/{id}", function (Application $app, $id) {
+        $app->delete("/threads/{id}", function (Application $app, Request $req, $id) {
             /** @var ThreadManagement $service */
             $service = $app["bbsapi.thread.management"];
             $thread = $service->findOne($id);
@@ -115,9 +115,10 @@ class BBSAPIThreadServiceProvider implements ServiceProviderInterface
                 return $app->json([], 404);
             }
 
-            // todo:
-            $em = $app["entity_manager"];
-            $user = $em->getRepository(EntityConstant::USER)->find(1);
+            $user = $req->getUser();
+            if (!$user) {
+                return $app->json([], 401);
+            }
 
             $result = $service->remove($thread, $user);
             if (!$result) {
