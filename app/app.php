@@ -21,7 +21,7 @@ $app->register(new BBSAPIServiceProvider(), [
     "salt" => $config["salt"]
 ]);
 $app->register(new BBSAPIUserServiceProvider());
-$app->register(new BBSAPITreadServiceProvider());
+$app->register(new BBSAPIThreadServiceProvider());
 
 $app->get("/", function (Application $app) {
     $composerJSON = json_decode(file_get_contents(__DIR__ . "/../composer.json"), true);

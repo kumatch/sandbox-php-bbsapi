@@ -2,7 +2,6 @@
 namespace Kumatch\BBSAPI\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * AccessToken
@@ -114,7 +113,7 @@ class AccessToken
 
     /**
      * @param User $user
-     * @return AccessToken
+     * @return $this
      */
     public function setUser(User $user = null)
     {
@@ -133,7 +132,7 @@ class AccessToken
 
     /**
      * @param string $token
-     * @return AccessToken
+     * @return $this
      */
     public function setToken($token)
     {
@@ -152,7 +151,7 @@ class AccessToken
 
     /**
      * @param integer $period
-     * @return AccessToken
+     * @return $this
      */
     public function setPeriod($period)
     {
