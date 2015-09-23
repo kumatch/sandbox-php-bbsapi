@@ -2,13 +2,13 @@
 use Silex\Application;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Kumatch\Silex\JsonBodyProvider;
+use Kumatch\BBSAPI\Application\Provider\DoctrineORMServiceProvider;
+use Kumatch\BBSAPI\Application\Provider\BBSAPIServiceProvider;
+use Kumatch\BBSAPI\Application\Provider\BBSAPIUserServiceProvider;
+use Kumatch\BBSAPI\Application\Provider\BBSAPIThreadServiceProvider;
 
 $loader = require_once __DIR__ . '/../vendor/autoload.php';
 $config = require_once __DIR__ . "/../config/config.php";
-require_once __DIR__ . "/provider/DoctrineORMServiceProvider.php";
-require_once __DIR__ . "/provider/BBSAPIServiceProvider.php";
-require_once __DIR__ . "/provider/BBSAPIUserServiceProvider.php";
-require_once __DIR__ . "/provider/BBSAPIThreadServiceProvider.php";
 
 AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
 

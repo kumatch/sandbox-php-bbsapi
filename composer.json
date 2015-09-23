@@ -26,6 +26,7 @@
     "autoload": {
         "psr-4": {
             "Kumatch\\BBSAPI\\": "src/",
+            "Kumatch\\BBSAPI\\Application\\": "app/",
             "Kumatch\\BBSAPI\\Test\\": "tests/"
         }
     }

@@ -1,15 +1,18 @@
 <?php
+namespace Kumatch\BBSAPI\Application\Provider;
+
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Kumatch\BBSAPI\UseCase\ThreadManagement;
 use Kumatch\BBSAPI\UseCase\TagRegistration;
 use Kumatch\BBSAPI\Entity\Thread;
+use Kumatch\BBSAPI\Entity\EntityConstant;
 use Kumatch\BBSAPI\Value\Tags;
 use Kumatch\BBSAPI\Spec\ThreadSpec;
 use Kumatch\BBSAPI\Spec\TagsSpec;
 
-class BBSAPITreadServiceProvider implements ServiceProviderInterface
+class BBSAPIThreadServiceProvider implements ServiceProviderInterface
 {
     public function register(Application $app)
     {
@@ -61,7 +64,7 @@ class BBSAPITreadServiceProvider implements ServiceProviderInterface
 
             // todo:
             $em = $app["entity_manager"];
-            $user = $em->getRepository(\Kumatch\BBSAPI\Entity\EntityConstant::USER)->find(1);
+            $user = $em->getRepository(EntityConstant::USER)->find(1);
 
             $thread = $service->create($thread, $user);
 
@@ -114,7 +117,7 @@ class BBSAPITreadServiceProvider implements ServiceProviderInterface
 
             // todo:
             $em = $app["entity_manager"];
-            $user = $em->getRepository(\Kumatch\BBSAPI\Entity\EntityConstant::USER)->find(1);
+            $user = $em->getRepository(EntityConstant::USER)->find(1);
 
             $result = $service->remove($thread, $user);
             if (!$result) {

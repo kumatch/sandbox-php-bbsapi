@@ -1,10 +1,13 @@
 <?php
+namespace Kumatch\BBSAPI\Application\Provider;
+
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Kumatch\BBSAPI\UseCase\UserRegistration;
 use Kumatch\BBSAPI\UseCase\UserAuthentication;
+use Kumatch\BBSAPI\Entity\User;
 use Kumatch\BBSAPI\Spec\UserSpec;
 
 class BBSAPIUserServiceProvider implements ServiceProviderInterface
@@ -36,7 +39,7 @@ class BBSAPIUserServiceProvider implements ServiceProviderInterface
             $username = $req->request->get("username");
             $password = $req->request->get("password");
 
-            $user = new \Kumatch\BBSAPI\Entity\User();
+            $user = new User();
             $user->setEmail($email)
                 ->setUsername($username)
                 ->setPassword($password);

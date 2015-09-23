@@ -1,4 +1,6 @@
 <?php
+namespace Kumatch\BBSAPI\Application\Provider;
+
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Kumatch\BBSAPI\Utility\PasswordEncoder;
