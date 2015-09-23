@@ -23,6 +23,13 @@ $app->register(new BBSAPIServiceProvider(), [
 $app->register(new BBSAPIUserServiceProvider());
 $app->register(new BBSAPITreadServiceProvider());
 
+$app->get("/", function (Application $app) {
+    $composerJSON = json_decode(file_get_contents(__DIR__ . "/../composer.json"), true);
+    return $app->json([
+        "version" => $composerJSON["version"]
+    ]);
+});
+
 $app->error(function (\Exception $e, $code) use ($app) {
     switch ($code) {
         case 404:

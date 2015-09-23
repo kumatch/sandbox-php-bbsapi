@@ -1,7 +1,8 @@
 {
     "name": "kumatch/bbsapi",
-    "type":"library",
-    "homepage": "https://github.com/kumatch/bbsapi",
+    "version": "1.0.0",
+    "type":"project",
+    "homepage": "https://github.com/kumatch/sandbox-php-bbsapi",
     "license": "MIT",
     "authors": [
         {
