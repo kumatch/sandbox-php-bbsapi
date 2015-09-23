@@ -96,6 +96,7 @@ class ThreadSpecTest extends \PHPUnit_Framework_TestCase
         $id = 42;
         $title = "foobarbaz";
         $createdAtUnixTime = 1234567890;
+        $lastPostedAtUnixTime = 1333333333;
         $tags = ["foo", "bar"];
 
         $tag1 = new Tag();
@@ -118,5 +119,11 @@ class ThreadSpecTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($title, $results["title"]);
         $this->assertEquals($createdAtUnixTime, $results["created_at"]);
         $this->assertEquals($tags, $results["tags"]);
+        $this->assertFalse(isset($results["last_posted_at"]));
+
+        $thread->setLastPostedAt(new \DateTime('@' . $lastPostedAtUnixTime));
+        $results2 = $this->spec->format($thread);
+
+        $this->assertEquals($lastPostedAtUnixTime, $results2["last_posted_at"]);
     }
 }

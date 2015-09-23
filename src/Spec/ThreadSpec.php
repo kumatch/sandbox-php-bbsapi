@@ -27,7 +27,7 @@ class ThreadSpec extends SpecAbstract
      */
     public function format(Thread $thread)
     {
-        return [
+        $results = [
             "id" => $thread->getId(),
             "title" => $thread->getTitle(),
             "created_at" => $thread->getCreatedAt()->getTimestamp(),
@@ -36,5 +36,12 @@ class ThreadSpec extends SpecAbstract
                 return $tag->getName();
             }, $thread->getTags())
         ];
+
+        $lastPostedAt = $thread->getLastPostedAt();
+        if ($lastPostedAt) {
+            $results["last_posted_at"] = $lastPostedAt->getTimestamp();
+        }
+
+        return $results;
     }
 }

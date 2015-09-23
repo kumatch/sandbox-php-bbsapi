@@ -5,10 +5,13 @@ use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Kumatch\BBSAPI\Application\Request;
 use Kumatch\BBSAPI\UseCase\ThreadManagement;
+use Kumatch\BBSAPI\UseCase\ThreadPostManagement;
 use Kumatch\BBSAPI\UseCase\TagRegistration;
 use Kumatch\BBSAPI\Entity\Thread;
+use Kumatch\BBSAPI\Entity\Post;
 use Kumatch\BBSAPI\Value\Tags;
 use Kumatch\BBSAPI\Spec\ThreadSpec;
+use Kumatch\BBSAPI\Spec\PostSpec;
 use Kumatch\BBSAPI\Spec\TagsSpec;
 
 class BBSAPIThreadServiceProvider implements ServiceProviderInterface
@@ -18,12 +21,18 @@ class BBSAPIThreadServiceProvider implements ServiceProviderInterface
         $app["bbsapi.thread.management"] = function (Application $app) {
             return new ThreadManagement($app["entity_manager"]);
         };
+        $app["bbsapi.thread.post_management"] = function (Application $app) {
+            return new ThreadPostManagement($app["entity_manager"]);
+        };
         $app["bbsapi.tag.registration"] = function (Application $app) {
             return new TagRegistration($app["entity_manager"]);
         };
 
         $app["bbsapi.spec.thread_spec"] = function () {
             return new ThreadSpec();
+        };
+        $app["bbsapi.spec.post_spec"] = function () {
+            return new PostSpec();
         };
         $app["bbsapi.spec.tags_spec"] = function () {
             return new TagsSpec();
@@ -126,6 +135,70 @@ class BBSAPIThreadServiceProvider implements ServiceProviderInterface
             }
 
             return $app->json([], 200);
+        });
+
+
+        $app->post("/threads/{id}/posts", function (Application $app, Request $req, $id) {
+            /** @var ThreadManagement $threadService */
+            $threadService = $app["bbsapi.thread.management"];
+            /** @var ThreadPostManagement $postService */
+            $postService = $app["bbsapi.thread.post_management"];
+            /** @var PostSpec $postSpec */
+            $postSpec = $app["bbsapi.spec.post_spec"];
+
+            $thread = $threadService->findOne($id);
+            if (!$thread) {
+                return $app->json([], 404);
+            }
+
+            $content = trim($req->request->get("content"));
+            $post = new Post();
+            $post->setContent($content);
+
+            $result = $postSpec->validate($post);
+            if (!$result->isValid()) {
+                return $app->json([ "errors" => $result->getErrors() ], 400);
+            }
+
+            $post = $postService->register($thread, $post);
+
+            return $app->json($postSpec->format($post), 200);
+        });
+
+        $app->get("/threads/{id}/posts", function (Application $app, $id) {
+            /** @var ThreadManagement $threadService */
+            $threadService = $app["bbsapi.thread.management"];
+            /** @var PostSpec $postSpec */
+            $postSpec = $app["bbsapi.spec.post_spec"];
+
+            $thread = $threadService->findOne($id);
+            if (!$thread) {
+                return $app->json([], 404);
+            }
+
+            return $app->json(array_map(function ($post) use ($postSpec) {
+                /** @var Post $post */
+                return $postSpec->format($post);
+            }, $thread->getPosts()), 200);
+        });
+
+        $app->get("/threads/{threadId}/posts/{postId}", function (Application $app, $threadId, $postId) {
+            /** @var ThreadManagement $threadService */
+            $threadService = $app["bbsapi.thread.management"];
+            /** @var PostSpec $postSpec */
+            $postSpec = $app["bbsapi.spec.post_spec"];
+
+            $thread = $threadService->findOne($threadId);
+            if (!$thread) {
+                return $app->json([], 404);
+            }
+
+            $post = $thread->getPost($postId);
+            if (!$post) {
+                return $app->json([], 404);
+            }
+
+            return $app->json($postSpec->format($post), 200);
         });
     }
 

@@ -4,6 +4,7 @@ namespace Kumatch\BBSAPI\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Thread
@@ -47,6 +48,11 @@ class Thread
     private $lastPostedAt;
 
     /**
+     * @ORM\OneToMany(targetEntity="Kumatch\BBSAPI\Entity\Post", mappedBy="thread", cascade={"persist"})
+     **/
+    private $posts;
+
+    /**
      * @var ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="Kumatch\BBSAPI\Entity\Tag", cascade={"persist"})
@@ -76,6 +82,7 @@ class Thread
     {
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
+        $this->posts = new ArrayCollection();
         $this->tags = new ArrayCollection();
     }
 
@@ -198,6 +205,26 @@ class Thread
     }
 
     /**
+     * @param Post $post
+     * @return $this
+     */
+    public function addPost(Post $post)
+    {
+        $this->posts[] = $post;
+
+        return $this;
+    }
+
+    /**
+     * @param Post $post
+     */
+    public function removePost(Post $post)
+    {
+        $this->tags->removeElement($post);
+    }
+
+
+    /**
      * @param Tag $tag
      * @return $this
      */
@@ -207,6 +234,36 @@ class Thread
 
         return $this;
     }
+
+    /**
+     * @return Post[]
+     */
+    public function getPosts()
+    {
+        $criteria = Criteria::create()
+            ->orderBy(array("createdAt" => Criteria::ASC));
+
+        return $this->posts->matching($criteria)->toArray();
+    }
+
+    /**
+     * @param int $postId
+     * @return Post|null
+     */
+    public function getPost($postId)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("id", $postId))
+            ->setFirstResult(0)->setMaxResults(1);
+
+        $matches = $this->posts->matching($criteria);
+        if ($matches->count()) {
+            return $matches->first();
+        } else {
+            return null;
+        }
+    }
+
 
     /**
      * @param Tag $tag
