@@ -77,7 +77,7 @@ class BBSAPIThreadServiceProvider implements ServiceProviderInterface
 
             $thread = $service->create($thread, $user);
 
-            return $app->json($threadSpec->format($thread));
+            return $app->json($threadSpec->format($thread), 201);
         });
 
 
@@ -162,7 +162,7 @@ class BBSAPIThreadServiceProvider implements ServiceProviderInterface
 
             $post = $postService->register($thread, $post);
 
-            return $app->json($postSpec->format($post), 200);
+            return $app->json($postSpec->format($post), 201);
         });
 
         $app->get("/threads/{id}/posts", function (Application $app, $id) {

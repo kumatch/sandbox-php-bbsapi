@@ -84,7 +84,7 @@ class BBSAPIUserServiceProvider implements ServiceProviderInterface
             return $app->json([
                 "email" => $user->getEmail(),
                 "username" => $user->getUsername()
-            ]);
+            ], 201);
         });
 
 
