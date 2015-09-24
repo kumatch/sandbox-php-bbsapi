@@ -82,7 +82,8 @@ class UserSpecTest extends \PHPUnit_Framework_TestCase
             [ "" ],
             [ " " ],
             [ "日本語" ],
-            [ "toolongusername" ]
+            [ "toolongusername" ],
+            [ "foo.bar" ]
         ];
     }
 
