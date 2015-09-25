@@ -43,7 +43,9 @@ $ ./create-db.sh
 ```
 
 then created a SQLite database to `db/db.sqlite`.
+
 すると `db/db.sqlite` という SQLite データベースが作成されます.
+
 
 ### 4. Runs application server with PHP built-in web server
 
@@ -55,6 +57,7 @@ $ php -S localhost:8080
 ```
 
 and access to [http://localhost:8080/](http://localhost:8080/).
+
 そして [http://localhost:8080/](http://localhost:8080/) へアクセスします。
 
 
