@@ -93,7 +93,7 @@ class BBSAPIThreadServiceProvider implements ServiceProviderInterface
             }
 
             return $app->json($threadSpec->format($thread));
-        });
+        })->assert('id', '^\d+$');
 
         $app->get("/threads", function (Application $app, Request $req) {
             /** @var ThreadSpec $threadSpec */
@@ -135,7 +135,7 @@ class BBSAPIThreadServiceProvider implements ServiceProviderInterface
             }
 
             return $app->json([], 200);
-        });
+        })->assert('id', '^\d+$');
 
 
         $app->post("/threads/{id}/posts", function (Application $app, Request $req, $id) {
@@ -163,7 +163,7 @@ class BBSAPIThreadServiceProvider implements ServiceProviderInterface
             $post = $postService->register($thread, $post);
 
             return $app->json($postSpec->format($post), 201);
-        });
+        })->assert('id', '^\d+$');
 
         $app->get("/threads/{id}/posts", function (Application $app, $id) {
             /** @var ThreadManagement $threadService */
@@ -180,7 +180,8 @@ class BBSAPIThreadServiceProvider implements ServiceProviderInterface
                 /** @var Post $post */
                 return $postSpec->format($post);
             }, $thread->getPosts()), 200);
-        });
+        })->assert('id', '^\d+$');
+
 
         $app->get("/threads/{threadId}/posts/{postId}", function (Application $app, $threadId, $postId) {
             /** @var ThreadManagement $threadService */
@@ -199,7 +200,8 @@ class BBSAPIThreadServiceProvider implements ServiceProviderInterface
             }
 
             return $app->json($postSpec->format($post), 200);
-        });
+        })->assert('threadId', '^\d+$')->assert('postId', '^\d+$');
+
     }
 
     public function boot(Application $app)
