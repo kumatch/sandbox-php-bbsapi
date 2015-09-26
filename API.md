@@ -6,8 +6,8 @@ API
 POST /user/register | ユーザ登録 |
 POST /user/authorize | ユーザ認証 (ログイン, アクセストークンの発行) |
 GET /users/{username} | 特定のユーザ情報を取得 |
-POST /threads | 新しいスレッドを作成 | ✔️
-DELETE /threads/{thread_id} | 特定のスレッドを削除 |  ✔️
+POST /threads | 新しいスレッドを作成 | 必要
+DELETE /threads/{thread_id} | 特定のスレッドを削除 | 必要
 GET /threads/{thread_id} | 特定のスレッド情報を取得 |
 GET /threads?tags=foo,bar,baz | タグを指定してスレッド情報を一覧取得 |
 POST /threads/{thread_id}/posts | 特定のスレッドへ新しいポストを投稿 |
