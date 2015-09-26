@@ -1,17 +1,36 @@
 API
 ====
 
-リソース | 説明
-------- | ----
-POST /user/register | ユーザ登録
-POST /user/authorize | ユーザ認証 (ログイン)
-POST /threads | 新しいスレッドを作成
-DELETE /threads/{thread_id} | 特定のスレッドを削除
-GET /threads/{thread_id} | 特定のスレッド情報を取得
-GET /threads?tags=foo,bar,baz | タグを指定してスレッド情報を一覧取得
-POST /threads/{thread_id}/posts | 特定のスレッドへ新しいポストを投稿
-GET /threads/{thread_id}/posts | 特定のスレッドのポスト情報を一覧取得
-GET /threads/{thread_id}/posts/{post_id} | 特定のスレッドポスト情報を取得
+リソース | 説明 |アクセストークンの必要性
+------- | ---- |
+POST /user/register | ユーザ登録 |
+POST /user/authorize | ユーザ認証 (ログイン, アクセストークンの発行) |
+POST /threads | 新しいスレッドを作成 | ✔️
+DELETE /threads/{thread_id} | 特定のスレッドを削除 |  ✔️
+GET /threads/{thread_id} | 特定のスレッド情報を取得 |
+GET /threads?tags=foo,bar,baz | タグを指定してスレッド情報を一覧取得 |
+POST /threads/{thread_id}/posts | 特定のスレッドへ新しいポストを投稿 |
+GET /threads/{thread_id}/posts | 特定のスレッドのポスト情報を一覧取得 |
+GET /threads/{thread_id}/posts/{post_id} | 特定のスレッドポスト情報を取得 |
+
+
+API User Authorization
+-----
+
+一部 API ではユーザ識別のためのアクセストークンが要求される。
+ユーザ認証 API (/user/authorize) によって得られるユーザ識別子およびアクセストークンを、API リクエストヘッダ要素として以下に示すヘッダ名で送信する。
+
+リクエストヘッダ名 | 説明
+------- | ---- | ----
+X-BBSAPI-USER-ID | ユーザ識別子
+X-BBSAPI-TOKEN | ユーザ認証によって得られたアクセストークン値
+
+```
+X-BBSAPI-USER-ID:1
+X-BBSAPI-TOKEN:4LGJmkSY1XfEdGXpyVxxfTCICjwtn3mx8FDg6a14
+```
+
+
 
 POST /user/register
 ----------
@@ -113,7 +132,7 @@ POST /threads
 ----
 
 スレッドの作成を行うことができるのは登録ユーザのみ。
-先にユーザ認証を行って API アクセストークンを作成して、リクエストにアクセストークンを指定する必要がある。
+先にユーザ認証を行って API アクセストークンを作成して、リクエストヘッダにアクセストークンを指定する必要がある。
 
 ### Request
 
@@ -172,7 +191,7 @@ DELETE /threads/{thread_id}
 ----
 
 スレッドの削除を行うことができるのは登録ユーザで、かつそのスレッドを作成したユーザのみ。
-先にユーザ認証を行って API アクセストークンを作成して、リクエストにアクセストークンを指定する必要がある。
+先にユーザ認証を行って API アクセストークンを作成して、リクエストヘッダにアクセストークンを指定する必要がある。
 
 ### Request
 
