@@ -78,7 +78,6 @@ username | 登録ユーザのユーザ名
 ユーザ登録のためのリクエストデータが条件に適していない場合。
 
 
-
 POST /user/authorize
 ----
 
@@ -128,7 +127,7 @@ period | アクセストークンの有効期限 (Unix タイム形式)
 
 
 
-POST /users/{username}
+GET /users/{username}
 ----------
 
 ### Request
