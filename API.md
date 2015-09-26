@@ -5,6 +5,7 @@ API
 ------- | ---- |
 POST /user/register | ユーザ登録 |
 POST /user/authorize | ユーザ認証 (ログイン, アクセストークンの発行) |
+GET /users/{username} | 特定のユーザ情報を取得 |
 POST /threads | 新しいスレッドを作成 | ✔️
 DELETE /threads/{thread_id} | 特定のスレッドを削除 |  ✔️
 GET /threads/{thread_id} | 特定のスレッド情報を取得 |
@@ -124,6 +125,40 @@ period | アクセストークンの有効期限 (Unix タイム形式)
 #### 401 Unauthorized
 
 ユーザ認証に失敗。
+
+
+
+POST /users/{username}
+----------
+
+### Request
+
+URL 部に取得するユーザ名を指定する。
+
+
+
+### Response
+
+#### 200 OK
+
+特定ユーザ情報が返される。
+
+要素名 | 説明
+------- | ----
+email | ユーザのメールアドレス
+username | ユーザのユーザ名
+
+
+```
+{
+    "email": "foo@example.com",
+    "username": "foo"
+}
+```
+
+##### 404 Not Found
+
+特定ユーザが存在しない。
 
 
 

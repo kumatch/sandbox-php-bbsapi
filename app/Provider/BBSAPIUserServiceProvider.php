@@ -73,18 +73,21 @@ class BBSAPIUserServiceProvider implements ServiceProviderInterface
                 return $app->json([ "errors" => $result->getErrors() ], 400);
             }
 
+            $alreadyExistsErrors = [
+                "user" => [ sprintf("A username [%s] is already exists.", $user->getUsername()) ]
+            ];
+
+            if ($service->findByUsername($user->getUsername())) {
+                return $app->json([ "errors" => $alreadyExistsErrors ]);
+            }
+
             try {
                 $user = $service->invoke($user);
             } catch (UniqueConstraintViolationException $e) {
-                return $app->json([ "errors" => [
-                    "user" => [ sprintf("A username [%s] is already exists.", $user->getUsername()) ]
-                ]]);
+                return $app->json([ "errors" => $alreadyExistsErrors ]);
             }
 
-            return $app->json([
-                "email" => $user->getEmail(),
-                "username" => $user->getUsername()
-            ], 201);
+            return $app->json($spec->format($user), 201);
         });
 
 
@@ -106,6 +109,20 @@ class BBSAPIUserServiceProvider implements ServiceProviderInterface
                 "period" => $accessToken->getPeriod(),
             ]);
         });
+
+        $app->get("/users/{username}", function (Application $app, $username) {
+            /** @var UserSpec $spec */
+            $spec = $app["bbsapi.spec.user_spec"];
+            /** @var UserRegistration $service */
+            $service = $app["bbsapi.user.registration"];
+
+            $user = $service->findByUsername($username);
+            if (!$user) {
+                return $app->json(null, 404);
+            }
+
+            return $app->json($spec->format($user));
+        })->assert('username', '^\w+$');
     }
 
     public function boot(Application $app)

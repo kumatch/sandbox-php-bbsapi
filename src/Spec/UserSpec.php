@@ -19,4 +19,16 @@ class UserSpec extends SpecAbstract
             return new SpecResult(false, $errors);
         }
     }
+
+    /**
+     * @param User $user
+     * @return array
+     */
+    public function format(User $user)
+    {
+        return [
+            "email" => $user->getEmail(),
+            "username" => $user->getUsername()
+        ];
+    }
 }

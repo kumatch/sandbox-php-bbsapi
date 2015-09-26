@@ -50,4 +50,17 @@ class UserRegistration
 
         return $user;
     }
+
+    /**
+     * @param string $username
+     * @return User|null
+     */
+    public function findByUsername($username)
+    {
+        $criteria = [
+            "username" => $username
+        ];
+
+        return $this->userRepository->findOneBy($criteria);
+    }
 }

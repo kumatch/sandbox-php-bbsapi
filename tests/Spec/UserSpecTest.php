@@ -139,4 +139,27 @@ class UserSpecTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $errors);
         $this->assertCount($errorSize, $errors["password"]);
     }
+
+    /**
+     * @test
+     */
+    public function format()
+    {
+        $id = 42;
+        $email = "foo@example.com";
+        $username = "foo_bar";
+
+        $user = $this->getMock('Kumatch\BBSAPI\Entity\User', array("getId"));
+        $user->expects($this->any())->method("getId")->will($this->returnValue($id));
+        /** @var User $user */
+
+        $user->setEmail($email)
+            ->setUsername($username);
+
+        $results = $this->spec->format($user);
+
+        $this->assertCount(2, $results);
+        $this->assertEquals($email, $results["email"]);
+        $this->assertEquals($username, $results["username"]);
+    }
 }

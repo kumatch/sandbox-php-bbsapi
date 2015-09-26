@@ -76,4 +76,58 @@ class UserRegistrationTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($encodedPassword, $user->getEncodedPassword());
         $this->assertNull($user->getPassword());
     }
+
+    /**
+     * @test
+     */
+    public function findUserByUsername()
+    {
+        $username = "foobar";
+        $user = new User();
+        $user->setUsername($username);
+
+        $repoMock = $this->getMock("RepositoryMock", array("findOneBy"));
+        $repoMock->expects($this->once())->method("findOneBy")
+            ->with($this->equalTo([ "username" => $username ]))
+            ->will($this->returnValue($user));
+
+        $emMock = $this->getEntityManagerMock(array("getRepository"));
+        $emMock->expects($this->once())->method("getRepository")
+            ->with($this->equalTo(EntityConstant::USER))
+            ->will($this->returnValue($repoMock));
+
+        $passwordEncoderMock = $this->getPasswordEncoderMock();
+        /** @var \Doctrine\ORM\EntityManager $emMock */
+        /** @var \Kumatch\BBSAPI\Utility\PasswordEncoder $passwordEncoderMock */
+
+        $useCase = new UserRegistration($emMock, $passwordEncoderMock);
+
+        $this->assertEquals($user, $useCase->findByUsername($username));
+    }
+
+    /**
+     * @test
+     */
+    public function getNullIfFindUsernameIsNotExists()
+    {
+        $username = "foobar";
+
+        $repoMock = $this->getMock("RepositoryMock", array("findOneBy"));
+        $repoMock->expects($this->once())->method("findOneBy")
+            ->with($this->equalTo([ "username" => $username ]))
+            ->will($this->returnValue(null));
+
+        $emMock = $this->getEntityManagerMock(array("getRepository"));
+        $emMock->expects($this->once())->method("getRepository")
+            ->with($this->equalTo(EntityConstant::USER))
+            ->will($this->returnValue($repoMock));
+
+        $passwordEncoderMock = $this->getPasswordEncoderMock();
+        /** @var \Doctrine\ORM\EntityManager $emMock */
+        /** @var \Kumatch\BBSAPI\Utility\PasswordEncoder $passwordEncoderMock */
+
+        $useCase = new UserRegistration($emMock, $passwordEncoderMock);
+
+        $this->assertNull($useCase->findByUsername($username));
+    }
 }
