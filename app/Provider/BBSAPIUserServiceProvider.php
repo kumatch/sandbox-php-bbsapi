@@ -78,13 +78,13 @@ class BBSAPIUserServiceProvider implements ServiceProviderInterface
             ];
 
             if ($service->findByUsername($user->getUsername())) {
-                return $app->json([ "errors" => $alreadyExistsErrors ]);
+                return $app->json([ "errors" => $alreadyExistsErrors ], 400);
             }
 
             try {
                 $user = $service->invoke($user);
             } catch (UniqueConstraintViolationException $e) {
-                return $app->json([ "errors" => $alreadyExistsErrors ]);
+                return $app->json([ "errors" => $alreadyExistsErrors ], 400);
             }
 
             return $app->json($spec->format($user), 201);
