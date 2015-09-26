@@ -21,7 +21,8 @@
         "phpunit/phpunit": "4.*"
     },
     "scripts": {
-        "server": "cd public && /usr/bin/env php -S localhost:8080"
+        "server": "cd public && /usr/bin/env php -S localhost:8080",
+        "test": "./vendor/bin/phpunit -c phpunit.xml.dist"
     },
     "autoload": {
         "psr-4": {

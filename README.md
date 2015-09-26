@@ -64,4 +64,13 @@ and access to [http://localhost:8080/](http://localhost:8080/).
 Usage
 ---
 
-* [API](https://github.com/kumatch/sandbox-php-bbsapi/blob/master/API.md)
+### API reference
+
+* [API.md](https://github.com/kumatch/sandbox-php-bbsapi/blob/master/API.md)
+
+
+### Tests
+
+```
+$ composer test
+```
